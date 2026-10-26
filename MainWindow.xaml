@@ -1,0 +1,8 @@
+<Window x:Class="MacTopBar.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="MacTopBar" Height="34" WindowStyle="None" ResizeMode="NoResize"
+ AllowsTransparency="False" Background="Transparent" Topmost="True"
+ ShowInTaskbar="False" WindowStartupLocation="Manual">
+ <Grid x:Name="Root" Background="#E01D1F23" Height="34" />
+</Window>

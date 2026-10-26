@@ -1,0 +1,33 @@
+<Window x:Class="MacTopBar.SettingsWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="MacTopBar Settings" Width="430" Height="365" ResizeMode="NoResize"
+ WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Topmost="True"
+ WindowStyle="SingleBorderWindow" Background="#FF222328">
+ <Grid Margin="22">
+  <Grid.RowDefinitions>
+   <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/>
+  </Grid.RowDefinitions>
+  <TextBlock Grid.Row="0" Text="MacTopBar Settings" FontSize="22" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,5"/>
+  <TextBlock Grid.Row="1" Text="Customize the menu bar on this device." Foreground="#FFBFC1C8" Margin="0,0,0,18"/>
+  <StackPanel Grid.Row="2" Margin="0,0,0,17">
+   <TextBlock Text="Appearance" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+   <ComboBox x:Name="AppearanceBox" Height="32" SelectedIndex="0" Padding="6">
+    <ComboBoxItem Content="Dark"/><ComboBoxItem Content="Light"/>
+   </ComboBox>
+  </StackPanel>
+  <StackPanel Grid.Row="3" Margin="0,0,0,17">
+   <DockPanel Margin="0,0,0,5">
+    <TextBlock Text="Transparency" Foreground="White" FontWeight="SemiBold"/>
+    <TextBlock x:Name="OpacityLabel" DockPanel.Dock="Right" Foreground="#FFD0D1D6" Text="88%"/>
+   </DockPanel>
+   <Slider x:Name="OpacitySlider" Minimum="55" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="False" Value="88" ValueChanged="OpacitySlider_ValueChanged"/>
+   <TextBlock Text="Lower opacity is more transparent; higher opacity is more solid." FontSize="11" Foreground="#FFBFC1C8" Margin="0,3,0,0"/>
+  </StackPanel>
+  <CheckBox x:Name="StartupBox" Grid.Row="4" Content="Start MacTopBar automatically when I sign in" Foreground="White" VerticalAlignment="Top" Margin="0,0,0,12"/>
+  <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+   <Button Content="Cancel" Width="86" Height="32" Margin="0,0,8,0" Click="Cancel_Click"/>
+   <Button Content="Save" Width="86" Height="32" IsDefault="True" Click="Save_Click"/>
+  </StackPanel>
+ </Grid>
+</Window>

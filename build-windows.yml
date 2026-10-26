@@ -1,0 +1,71 @@
+name: Build MacTopBar for Windows
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK on the cloud runner
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish self-contained Windows executable
+        shell: pwsh
+        run: >-
+          dotnet publish .\MacTopBar.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=None
+          -p:DebugSymbols=false
+          --output .\publish\win-x64
+
+      - name: Verify executable and prepare ZIP
+        shell: pwsh
+        run: |
+          $exe = Resolve-Path .\publish\win-x64\MacTopBar.exe -ErrorAction Stop
+          if ((Get-Item $exe).Length -lt 1MB) {
+            throw 'The published EXE is unexpectedly small; stopping instead of publishing a broken artifact.'
+          }
+          @'
+          MacTopBar for Windows 11 (x64)
+
+          1. Extract MacTopBar-win-x64.zip.
+          2. Double-click MacTopBar.exe.
+          3. Use the Apple-style menu > Settings to customize appearance and optional startup.
+          4. Use the Apple-style menu > Quit MacTopBar to exit.
+
+          This is a self-contained build and does not require a separate .NET runtime or SDK on the target PC.
+          Windows may show a SmartScreen warning for a newly built, unsigned app. Only run it if you trust the source.
+          '@ | Set-Content .\publish\win-x64\README-install.txt
+          Compress-Archive -Path .\publish\win-x64\MacTopBar.exe, .\publish\win-x64\README-install.txt -DestinationPath .\MacTopBar-win-x64.zip -Force
+
+      - name: Upload standalone EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacTopBar-win-x64-EXE
+          path: .\publish\win-x64\MacTopBar.exe
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload EXE ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacTopBar-win-x64-ZIP
+          path: .\MacTopBar-win-x64.zip
+          if-no-files-found: error
+          retention-days: 14
