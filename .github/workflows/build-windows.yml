@@ -1,0 +1,32 @@
+
+name: Build MacTopBar for Windows
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Download source
+        uses: actions/checkout@v4
+
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publish standalone executable
+        run: dotnet publish MacTopBar.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+
+      - name: Package application
+        run: Compress-Archive -Path publish\* -DestinationPath MacTopBar-win-x64.zip
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacTopBar-win-x64-ZIP
+          path: MacTopBar-win-x64.zip
