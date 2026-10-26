@@ -104,7 +104,7 @@ public partial class MainWindow : Window
         var body = new Path
         {
             Fill = _textBrush,
-            Data = Geometry.Parse("M 8.8,5.2 C 6.3,3.7 2.0,5.0 1.7,9.4 C 1.4,13.4 4.0,18.3 6.5,18.5 C 7.6,18.6 8.5,17.7 9.5,17.7 C 10.5,17.7 11.4,18.6 12.5,18.4 C 15.3,18.1 17.2,13.5 17.0,10.5 C 16.9,7.7 14.5,5.1 11.7,5.4 C 10.5,5.6 9.7,6.0 8.8,5.2 Z")
+            Data = Geometry.Parse("M 8.8,5.2 C 6.3,3.7 2.0,5.0 1.7,9.4 C 1.4,13.4 4.0,18.3 6.5,18.5 C 7.6,18.6 8.5,17.7 9.5,17.7 C 10.5,17.7 11.4,18.6 12.5,18.4 C 15.3,18.1 17.2,13.5 17.0,10.5 C 16.9,7.8 15.6,6.1 13.7,5.4 C 12.7,5.0 11.5,5.4 10.9,5.4 C 10.2,5.5 9.2,5.0 8.8,5.2 Z")
         };
         var leaf = new Path
         {
@@ -214,13 +214,13 @@ public partial class MainWindow : Window
         border.AppendChild(dockPanel);
         template.VisualTree = border;
         var hover = new Trigger { Property = MenuItem.IsHighlightedProperty, Value = true };
-        hover.Setters.Add(new Setter(Border.BackgroundProperty, _settings.Appearance == "Light" ? new SolidColorBrush(Color.FromRgb(225, 232, 244)) : new SolidColorBrush(Color.FromRgb(70, 85, 111)), "Bd"));
+        hover.Setters.Add(new Setter(Border.BackgroundProperty, _settings.Appearance == "Light" ? new SolidColorBrush(Color.FromRgb(225, 232, 244)) : new SolidColorBrush(Color.FromRgb(70, 85, 111)), null));
         template.Triggers.Add(hover);
         itemStyle.Setters.Add(new Setter(Control.TemplateProperty, template));
         menu.Resources[typeof(MenuItem)] = itemStyle;
         var separatorStyle = new Style(typeof(Separator));
         separatorStyle.Setters.Add(new Setter(Separator.MarginProperty, new Thickness(5, 4, 5, 4)));
-        separatorStyle.Setters.Add(new Setter(Separator.BackgroundProperty, _settings.Appearance == "Light" ? new SolidColorBrush(Color.FromRgb(220, 220, 224)) : new SolidColorBrush(Color.FromRgb(78, 79, 84))));
+        separatorStyle.Setters.Add(new Setter(Separator.BackgroundProperty, _settings.Appearance == "Light" ? new SolidColorBrush(Color.FromRgb(220, 220, 224)) : new SolidColorBrush(Color.FromRgb(78, 80, 87))));
         separatorStyle.Setters.Add(new Setter(Separator.HeightProperty, 1.0));
         menu.Resources[typeof(Separator)] = separatorStyle;
         return menu;
@@ -239,14 +239,14 @@ public partial class MainWindow : Window
     {
         var menu = NewMenu();
         menu.Items.Add(Item("About MacTopBar", ShowAbout));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Settings…", ShowSettings, "⌘,"));
         menu.Items.Add(Item("Open Windows Settings", () => StartProcess("ms-settings:")));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("File Explorer", () => StartProcess("explorer.exe")));
         menu.Items.Add(Item("Task Manager", () => StartProcess("taskmgr.exe")));
         menu.Items.Add(Item("Lock PC", () => StartProcess("rundll32.exe", "user32.dll,LockWorkStation")));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Quit MacTopBar", _quitApplication, "Alt+F4"));
         return menu;
     }
@@ -257,7 +257,7 @@ public partial class MainWindow : Window
         var name = GetActiveApplicationName();
         menu.Items.Add(Item("About " + name, () => MessageBox.Show(this, $"Active application: {name}\n\nMacTopBar shows the currently focused Windows application.", "About " + name, MessageBoxButton.OK, MessageBoxImage.Information)));
         menu.Items.Add(Item("Show in Task Manager", () => StartProcess("taskmgr.exe")));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Minimize " + name, () => WithActiveWindow(h => NativeMethods.ShowWindow(h, NativeMethods.SW_MINIMIZE))));
         menu.Items.Add(Item("Quit " + name, () => WithActiveWindow(h => NativeMethods.PostMessage(h, NativeMethods.WM_CLOSE, IntPtr.Zero, IntPtr.Zero))));
         return menu;
@@ -269,7 +269,7 @@ public partial class MainWindow : Window
         menu.Items.Add(Item("New Explorer Window", () => StartProcess("explorer.exe"), "Ctrl+N"));
         menu.Items.Add(Item("Open Downloads", () => StartProcess("explorer.exe", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads")));
         menu.Items.Add(Item("Open Documents", () => StartProcess("explorer.exe", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Open Windows Settings", () => StartProcess("ms-settings:")));
         menu.Items.Add(Item("Close Front Window", () => SendShortcut("F4", alt: true), "Alt+F4"));
         return menu;
@@ -280,7 +280,7 @@ public partial class MainWindow : Window
         var menu = NewMenu();
         menu.Items.Add(Item("Undo", () => SendShortcut("Z", ctrl: true), "Ctrl+Z"));
         menu.Items.Add(Item("Redo", () => SendShortcut("Y", ctrl: true), "Ctrl+Y"));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Cut", () => SendShortcut("X", ctrl: true), "Ctrl+X"));
         menu.Items.Add(Item("Copy", () => SendShortcut("C", ctrl: true), "Ctrl+C"));
         menu.Items.Add(Item("Paste", () => SendShortcut("V", ctrl: true), "Ctrl+V"));
@@ -292,11 +292,11 @@ public partial class MainWindow : Window
     {
         var menu = NewMenu();
         menu.Items.Add(Item("Refresh", () => SendShortcut("F5"), "F5"));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Zoom In", () => SendShortcut("ADD", ctrl: true), "Ctrl++"));
         menu.Items.Add(Item("Zoom Out", () => SendShortcut("SUBTRACT", ctrl: true), "Ctrl+-"));
         menu.Items.Add(Item("Reset Zoom", () => SendShortcut("0", ctrl: true), "Ctrl+0"));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Toggle Full Screen", () => SendShortcut("F11"), "F11"));
         return menu;
     }
@@ -307,7 +307,7 @@ public partial class MainWindow : Window
         menu.Items.Add(Item("Minimize", () => WithActiveWindow(h => NativeMethods.ShowWindow(h, NativeMethods.SW_MINIMIZE)), "Win+↓"));
         menu.Items.Add(Item("Maximize / Restore", () => WithActiveWindow(h => NativeMethods.ShowWindow(h, NativeMethods.IsZoomed(h) ? NativeMethods.SW_RESTORE : 3))));
         menu.Items.Add(Item("Bring Front Window Forward", () => WithActiveWindow(h => NativeMethods.SetForegroundWindow(h))));
-        menu.Items.Add(Separator());
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("Show Desktop", () => SendShortcut("D", win: true), "Win+D"));
         menu.Items.Add(Item("Switch Application", () => SendShortcut("TAB", alt: true), "Alt+Tab"));
         return menu;
@@ -316,8 +316,9 @@ public partial class MainWindow : Window
     private ContextMenu BuildHelpMenu()
     {
         var menu = NewMenu();
-        menu.Items.Add(Item("MacTopBar Help", () => MessageBox.Show(this, "MacTopBar provides a macOS-inspired menu bar for Windows 11.\n\n• Click the Apple menu for Settings and Windows tools.\n• File, Edit, View and Window actions target the last focused application.\n• Use Settings to change appearance or enable startup.\n• Choose Quit MacTopBar to exit.", "MacTopBar Help", MessageBoxButton.OK, MessageBoxImage.Information)));
-        menu.Items.Add(Item("Keyboard Shortcuts", () => MessageBox.Show(this, "Edit: Ctrl+Z / Ctrl+Y / Ctrl+X / Ctrl+C / Ctrl+V / Ctrl+A\nView: F5, Ctrl++, Ctrl+-, Ctrl+0, F11\nWindow: Win+D, Alt+Tab, Alt+F4", "Keyboard Shortcuts", MessageBoxButton.OK, MessageBoxImage.Information)));
+        menu.Items.Add(Item("MacTopBar Help", () => MessageBox.Show(this, "MacTopBar provides a macOS-inspired menu bar for Windows 11.\n\n• Click the Apple menu for Settings and Windows tools.\n• Use the app name menu to manage the current foreground app.\n• Invoke keyboard shortcuts from the menu when the target app is focused.", "MacTopBar Help", MessageBoxButton.OK, MessageBoxImage.Information)));
+        menu.Items.Add(Item("Keyboard Shortcuts", () => MessageBox.Show(this, "Edit: Ctrl+Z / Ctrl+Y / Ctrl+X / Ctrl+C / Ctrl+V / Ctrl+A\nView: F5, Ctrl++, Ctrl+-, Ctrl+0, F11\nWindow: Win+D, Alt+Tab\nOther: F4, Alt+F4\n\nTip: MacTopBar tracks the current app and sends keyboard shortcuts to it.", "Keyboard Shortcuts", MessageBoxButton.OK, MessageBoxImage.Information)));
+        menu.Items.Add(CreateSeparator());
         menu.Items.Add(Item("About MacTopBar", ShowAbout));
         return menu;
     }
@@ -623,7 +624,7 @@ public partial class MainWindow : Window
         try
         {
             if (fileName.Equals("explorer.exe", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(args) && !args.StartsWith("/", StringComparison.Ordinal))
-                args = $"\"{args.Trim('\"')}\"";
+                args = $"\"{args.Trim('"')}\"";
             Process.Start(new ProcessStartInfo(fileName, args ?? "") { UseShellExecute = true });
         }
         catch (Exception ex) { MessageBox.Show($"Could not open {fileName}.\n\n{ex.Message}", "MacTopBar", MessageBoxButton.OK, MessageBoxImage.Warning); }
