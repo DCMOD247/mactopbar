@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace MacTopBar;
 
-internal sealed record MonitorInfo(int Left, int Top, int Width, int Height, int DpiX = 96, int DpiY = 96)
+public sealed record MonitorInfo(int Left, int Top, int Width, int Height, int DpiX = 96, int DpiY = 96)
 {
     [StructLayout(LayoutKind.Sequential)]
     private struct RECT { public int Left, Top, Right, Bottom; }
