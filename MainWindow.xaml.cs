@@ -233,7 +233,7 @@ public partial class MainWindow : Window
         return item;
     }
 
-    private static Separator Separator() => new();
+    private static Separator CreateSeparator() => new();
 
     private ContextMenu BuildAppleMenu()
     {
